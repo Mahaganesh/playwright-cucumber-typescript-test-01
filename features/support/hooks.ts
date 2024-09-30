@@ -1,14 +1,11 @@
-const { After, Before, BeforeAll, AfterAll, setDefaultTimeout } = require('@cucumber/cucumber');
-const { chromium } = require('playwright');
-const SetmoreLogin = require("../../page/app1.page");
-const ElementUtils = require('../../utils/elements-utils');
+import { After, Before, BeforeAll, AfterAll } from '@cucumber/cucumber';
+import { chromium, Browser, BrowserContext, Page } from 'playwright';
+import SetmoreLogin from '../../page/app.page';
+import ElementUtil from '../../utils/elements-utils';
 
-let browser;
-let context;
-let page;
-
-
-setDefaultTimeout(100000);
+let browser: Browser;
+let context: BrowserContext;
+let page: Page;
 
 BeforeAll(async function () {
   browser = await chromium.launch({ headless: false });
@@ -17,10 +14,11 @@ BeforeAll(async function () {
 Before(async function () {
   context = await browser.newContext();
   page = await context.newPage();
+  
   // Make the page accessible in step definitions through world context
   this.page = page; 
   this.setmoreLogin = new SetmoreLogin(page);
-  this.elementUtils = new ElementUtils(page);
+  this.elementUtils = new ElementUtil(page);
 
   await this.elementUtils.gotoURL('https://go.setmore.com');
   await this.setmoreLogin.setmoreLoginPageEmailField('mahaganesh.lt@mailinator.com');
@@ -29,7 +27,6 @@ Before(async function () {
 });
 
 After(async function () {
-  await page.close();
   await context.close();
 });
 
@@ -37,7 +34,8 @@ AfterAll(async function () {
   await browser.close();
 });
 
-module.exports = {
+// Exporting the context, browser, and page if needed in step definitions
+export {
   page,
   browser,
   context

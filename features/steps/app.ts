@@ -1,12 +1,10 @@
-require('../support/hooks');
-const { When, Then, Given } = require('@cucumber/cucumber');
+import { When, Then, Given } from '@cucumber/cucumber';
+import { page } from '../support/hooks';
 
-
-
-
-Given('Login to Setmore', {timeout: 100000}, async function () {
-
+Given('Login to Setmore', { timeout: 100000 }, async function () {
+    // Use this to access the page and setmoreLogin from hooks
     await this.setmoreLogin.waitForSetmoreCalenderSideButton();
+    await page.pause();
 });
 
 When('Select Contacts Component', async function () {
